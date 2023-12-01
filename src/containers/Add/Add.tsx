@@ -3,9 +3,8 @@ import PostForm from '../../components/FormForPost/FormForPost';
 const Add = () => {
   return (
     <div>
-      <h1>Add New Post</h1>
+      <h4 className="m-2">Add New Post</h4>
       <PostForm/>
-
     </div>
   );
 };

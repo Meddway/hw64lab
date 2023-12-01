@@ -41,7 +41,7 @@ const Home: React.FC = () => {
           <p className="text-secondary">Created on: {new Date(post.time).toLocaleString()}</p>
           <p>{textLengthForPost(post.content, 20)}</p>
           <Link to={`/posts/${post.id}`} className="btn btn-outline-primary">
-            Read more
+            Read more &gt; &gt;
           </Link>
         </div>
       ))}

@@ -40,7 +40,7 @@ const FormForPost: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="container mt-5 ms-0" style={{maxWidth: '480px'}}>
+    <form onSubmit={handleSubmit} className="container mt-2 ms-0" style={{maxWidth: '480px'}}>
       <div className="mb-3">
         <label htmlFor="title" className="form-label">Title:</label>
         <input
