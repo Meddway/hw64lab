@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosApi from '../../axiosApi';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const FormForPost: React.FC = () => {
+interface PostData {
+  title: string;
+  content: string;
+}
+
+interface FormForPostProps {
+  postData?: PostData;
+}
+
+const FormForPost: React.FC<FormForPostProps> = ({ postData = { title: '', content: '' } }) => {
   const navigate = useNavigate();
-  const [postData, setPostData] = useState({
-    title: '',
-    content: '',
-  });
+  const { id } = useParams<{ id: string }>();
+  const [formData, setFormData] = useState<PostData>(postData);
+
+  useEffect(() => {
+    if (id) {
+      setFormData(postData);
+    }
+  }, [id, postData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setPostData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -21,50 +34,51 @@ const FormForPost: React.FC = () => {
     e.preventDefault();
 
     try {
-      const postTime = (new Date()).valueOf();
-      const postDataPostTime = {
-        title: postData.title,
-        content: postData.content,
-        time: postTime,
-      };
-      await axiosApi.post('/posts.json', postDataPostTime);
+      if (id) {
+        await axiosApi.put(`/posts/${id}.json`, formData);
+      } else {
+        const postTime = new Date().valueOf();
+        const postDataWithTime = { ...formData, time: postTime };
+        await axiosApi.post('/posts.json', postDataWithTime);
+      }
       navigate('/');
-
-      setPostData({
-        title: '',
-        content: '',
-      });
     } catch (error) {
-      console.error('Error new post:', error);
+      console.error('Error post:', error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="container mt-2 ms-0" style={{maxWidth: '480px'}}>
+    <form onSubmit={handleSubmit} className="container mt-2 ms-0" style={{ maxWidth: '480px' }}>
       <div className="mb-3">
-        <label htmlFor="title" className="form-label">Title:</label>
+        <label htmlFor="title" className="form-label">
+          Title:
+        </label>
         <input
           type="text"
           className="form-control"
           id="title"
           name="title"
           required
-          value={postData.title}
+          value={formData.title}
           onChange={handleInputChange}
         />
       </div>
       <div className="mb-3">
-        <label htmlFor="content" className="form-label">Content:</label>
+        <label htmlFor="content" className="form-label">
+          Content:
+        </label>
         <textarea
           className="form-control"
           id="content"
           name="content"
           required
-          value={postData.content}
+          value={formData.content}
           onChange={handleInputChange}
         />
       </div>
-      <button type="submit" className="btn btn-primary">Create Post</button>
+      <button type="submit" className="btn btn-primary">
+        {id ? 'Save' : 'Create'}
+      </button>
     </form>
   );
 };

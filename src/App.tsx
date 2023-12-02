@@ -7,7 +7,6 @@ import PostForm from './components/FormForPost/FormForPost';
 import ReadPost from './containers/ReadPost/ReadPost';
 import Add from './containers/Add/Add';
 
-
 const App = () => (
   <>
     <header>
